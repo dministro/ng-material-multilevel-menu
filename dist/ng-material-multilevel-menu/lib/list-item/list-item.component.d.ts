@@ -2,6 +2,7 @@ import { OnChanges, OnInit, EventEmitter, TemplateRef, ElementRef } from '@angul
 import { Router } from '@angular/router';
 import { Configuration, ListStyle, MultilevelNodes, ExpandCollapseStatusEnum } from './../app.model';
 import { MultilevelMenuService } from './../multilevel-menu.service';
+import * as ɵngcc0 from '@angular/core';
 export declare class ListItemComponent implements OnChanges, OnInit {
     private router;
     multilevelMenuService: MultilevelMenuService;
@@ -41,4 +42,8 @@ export declare class ListItemComponent implements OnChanges, OnInit {
     setExpandCollapseStatus(): void;
     expand(node: MultilevelNodes): void;
     selectedListItem(node: MultilevelNodes): void;
+    static ɵfac: ɵngcc0.ɵɵFactoryDeclaration<ListItemComponent, never>;
+    static ɵcmp: ɵngcc0.ɵɵComponentDeclaration<ListItemComponent, "ng-list-item", never, { "level": "level"; "submenuLevel": "submenuLevel"; "nodeConfiguration": "nodeConfiguration"; "nodeExpandCollapseStatus": "nodeExpandCollapseStatus"; "listTemplate": "listTemplate"; "node": "node"; "selectedNode": "selectedNode"; }, { "selectedItem": "selectedItem"; }, never, never>;
 }
+
+//# sourceMappingURL=list-item.component.d.ts.map

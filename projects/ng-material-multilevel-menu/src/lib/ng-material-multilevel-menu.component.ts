@@ -12,24 +12,24 @@ import {CommonUtils} from './common-utils';
   styleUrls: ['./ng-material-multilevel-menu.component.css'],
 })
 export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() items: MultilevelNode[];
-  @Input() configuration: Configuration = null;
+  @Input() items?: MultilevelNode[];
+  @Input() configuration?: Configuration;
   @Output() selectedItem = new EventEmitter<MultilevelNode>();
   @Output() selectedLabel = new EventEmitter<MultilevelNode>();
   @Output() menuIsReady = new EventEmitter<MultilevelNode[]>();
-  @ContentChild('listTemplate', {static: true}) listTemplate: TemplateRef<ElementRef>;
+  @ContentChild('listTemplate', {static: true}) listTemplate?: TemplateRef<ElementRef>;
 
-  expandCollapseStatusSubscription: Subscription = null;
-  selectMenuByIDSubscription: Subscription = null;
-  currentNode: MultilevelNode = null;
+  expandCollapseStatusSubscription: Subscription | null = null;
+  selectMenuByIDSubscription: Subscription | null = null;
+  currentNode: MultilevelNode | null = null;
 
   nodeConfig: Configuration = {
     paddingAtStart: true,
-    listBackgroundColor: null,
-    fontColor: null,
-    selectedListFontColor: null,
-    interfaceWithRoute: null,
-    collapseOnSelect: null,
+    listBackgroundColor: undefined,
+    fontColor: undefined,
+    selectedListFontColor: undefined,
+    interfaceWithRoute: undefined,
+    collapseOnSelect: undefined,
     highlightOnSelect: false,
     useDividers: true,
     rtlLayout: false,
@@ -52,8 +52,8 @@ export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnD
     }
   }
   ngOnInit() {
-    if (!CommonUtils.isNullOrUndefinedOrEmpty(this.configuration) &&
-      this.configuration.interfaceWithRoute !== null && this.configuration.interfaceWithRoute) {
+    if (!CommonUtils.isNullOrUndefinedOrEmpty(this.configuration)
+        && this.configuration?.interfaceWithRoute) {
       this.router.events
         .subscribe((event) => {
           if (event instanceof NavigationEnd) {
@@ -64,7 +64,7 @@ export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnD
     }
   }
   updateNodeByURL(url: string): void {
-    const foundNode = this.multilevelMenuService.getMatchedObjectByUrl(this.items, url);
+    const foundNode = this.multilevelMenuService.getMatchedObjectByUrl(this.items || [], url);
     if (foundNode !== undefined && !CommonUtils.isNullOrUndefinedOrEmpty(foundNode.link)
       // && !foundNode.disabled // Prevent route redirection for disabled menu
     ) {
@@ -79,7 +79,7 @@ export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnD
       console.warn(CONSTANT.ERROR_MESSAGE);
       return;
     }
-    this.items = this.items.filter(n => !n.hidden);
+    //this.items = this.items.filter(n => n.hidden === true);
     this.multilevelMenuService.addRandomId(this.items);
     this.isInvalidData = false;
   }
@@ -88,7 +88,7 @@ export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnD
       this.isInvalidConfig = true;
     } else {
       this.isInvalidConfig = false;
-      const config = this.configuration;
+      const config = this.configuration || {};
       if (!CommonUtils.isNullOrUndefined(config.paddingAtStart) &&
         typeof config.paddingAtStart === 'boolean') {
         this.nodeConfig.paddingAtStart = config.paddingAtStart;
@@ -140,7 +140,7 @@ export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnD
   initSelectedMenuID(): void {
     this.selectMenuByIDSubscription = this.multilevelMenuService.selectedMenuID$.subscribe( (selectedMenuID: string) => {
       if (selectedMenuID) {
-        const foundNode = this.multilevelMenuService.getMatchedObjectById(this.items, selectedMenuID);
+        const foundNode = this.multilevelMenuService.getMatchedObjectById(this.items || [], selectedMenuID);
         if (foundNode !== undefined) {
           this.currentNode = foundNode;
           this.selectedListItem(foundNode);
@@ -149,24 +149,25 @@ export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnD
     });
   }
   getClassName(): string {
-    if (!this.isInvalidConfig && !CommonUtils.isNullOrUndefinedOrEmpty(this.configuration.classname)) {
-      return `${CONSTANT.DEFAULT_CLASS_NAME} ${this.configuration.classname}`;
+    if (!this.isInvalidConfig && !CommonUtils.isNullOrUndefinedOrEmpty(this.configuration?.classname)) {
+      return `${CONSTANT.DEFAULT_CLASS_NAME} ${this.configuration?.classname}`;
     }
     return CONSTANT.DEFAULT_CLASS_NAME;
   }
   getGlobalStyle(): BackgroundStyle {
     if (!this.isInvalidConfig) {
-      const styles = {
-        background : null
+      const styles: BackgroundStyle = {
       };
-      if (!CommonUtils.isNullOrUndefinedOrEmpty(this.configuration.backgroundColor)) {
-        styles.background = this.configuration.backgroundColor;
+      if (!CommonUtils.isNullOrUndefinedOrEmpty(this.configuration?.backgroundColor)) {
+        styles.background = this.configuration?.backgroundColor;
       }
       return styles;
     }
+
+    return { };
   }
   isRtlLayout(): boolean {
-    return this.nodeConfig.rtlLayout;
+    return this.nodeConfig.rtlLayout === true;
   }
   selectedListItem(event: MultilevelNode): void {
     this.nodeExpandCollapseStatus = ExpandCollapseStatusEnum.neutral;
@@ -181,7 +182,7 @@ export class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnD
     }
   }
   ngOnDestroy() {
-    this.expandCollapseStatusSubscription.unsubscribe();
-    this.selectMenuByIDSubscription.unsubscribe();
+    this.expandCollapseStatusSubscription?.unsubscribe();
+    this.selectMenuByIDSubscription?.unsubscribe();
   }
 }

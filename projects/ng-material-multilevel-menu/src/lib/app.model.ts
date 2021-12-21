@@ -1,8 +1,9 @@
 import { NavigationExtras } from '@angular/router';
+import { Observable } from 'rxjs';
 
 export interface MultilevelNode {
   id?: string;
-  label: string;
+  label: string | Promise<string> | Observable<string>;
   faIcon?: string;
   icon?: string;
   imageIcon?: string;
@@ -11,7 +12,7 @@ export interface MultilevelNode {
   activeIcon?: string;
   activeImageIcon?: string;
   activeSvgIcon?: string;
-  hidden?: boolean;
+  hidden?: boolean | Promise<boolean> | Observable<boolean>;
   link?: string;
   externalRedirect?: boolean;
   hrefTargetType?: string;
@@ -42,12 +43,12 @@ export interface Configuration {
 }
 
 export interface BackgroundStyle {
-    background: string;
+    background?: string | null | undefined;
 }
 
 export interface ListStyle {
-    background: string;
-    color: string;
+    background?: string;
+    color?: string;
 }
 
 export enum ExpandCollapseStatusEnum {

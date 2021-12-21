@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BackgroundStyle, Configuration, MultilevelNodes, ExpandCollapseStatusEnum } from './app.model';
 import { MultilevelMenuService } from './multilevel-menu.service';
+import * as ɵngcc0 from '@angular/core';
 export declare class NgMaterialMultilevelMenuComponent implements OnInit, OnChanges, OnDestroy {
     private router;
     multilevelMenuService: MultilevelMenuService;
@@ -32,4 +33,8 @@ export declare class NgMaterialMultilevelMenuComponent implements OnInit, OnChan
     isRtlLayout(): boolean;
     selectedListItem(event: MultilevelNodes): void;
     ngOnDestroy(): void;
+    static ɵfac: ɵngcc0.ɵɵFactoryDeclaration<NgMaterialMultilevelMenuComponent, never>;
+    static ɵcmp: ɵngcc0.ɵɵComponentDeclaration<NgMaterialMultilevelMenuComponent, "ng-material-multilevel-menu", never, { "configuration": "configuration"; "items": "items"; }, { "selectedItem": "selectedItem"; "selectedLabel": "selectedLabel"; "menuIsReady": "menuIsReady"; }, ["listTemplate"], never>;
 }
+
+//# sourceMappingURL=ng-material-multilevel-menu.component.d.ts.map

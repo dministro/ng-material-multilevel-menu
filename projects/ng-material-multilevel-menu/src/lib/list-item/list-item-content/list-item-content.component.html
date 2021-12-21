@@ -1,16 +1,16 @@
-<ng-container *ngTemplateOutlet="node.externalRedirect ? redirectLinkTemplate : routerLinkTemplate"></ng-container>
+<ng-container *ngTemplateOutlet="node && node.externalRedirect ? redirectLinkTemplate : routerLinkTemplate"></ng-container>
 
 <ng-template #redirectLinkTemplate>
-  <a class="anml-link" [href]="node.link" [target]="getHrefTargetType()">
+  <a class="anml-link" [href]="node && node.link" [target]="getHrefTargetType()">
     <ng-container *ngTemplateOutlet="isRtlLayout ? linkLabelRtlOutlet : linkLabelLtrOutlet"></ng-container>
   </a>
 </ng-template>
 
 <ng-template #routerLinkTemplate>
-  <a class="anml-link" *ngIf="!node.externalRedirect && node.link" [routerLink]="node.link">
+  <a class="anml-link" *ngIf="node && !node.externalRedirect && node.link" [routerLink]="node.link">
     <ng-container *ngTemplateOutlet="isRtlLayout ? linkLabelRtlOutlet : linkLabelLtrOutlet"></ng-container>
   </a>
-  <a class="anml-link" *ngIf="!node.link">
+  <a class="anml-link" *ngIf="node && !node.link">
     <ng-container *ngTemplateOutlet="isRtlLayout ? linkLabelRtlOutlet : linkLabelLtrOutlet"></ng-container>
   </a>
 </ng-template>
@@ -18,9 +18,9 @@
 <ng-template #linkLabelLtrOutlet>
   <div class="anml-data" [dir]="'ltr'">
     <ng-container *ngTemplateOutlet="iconContainer"></ng-container>
-    <span class="label">{{node.label}}</span>
+    <span class="label">{{node && node.label ? (!isLabelAsync ? (node.label && (node.label === 'string') ? node.label : '') : (labelAsync | async)) : ''}}</span>
   </div>
-  <div class="amml-icon-arrow-container" *ngIf='node.hasChildren'>
+  <div class="amml-icon-arrow-container" *ngIf='node && node.hasChildren'>
     <mat-icon [@ExpandedLTR]="nodeExpandStatus()">
       keyboard_arrow_down
     </mat-icon>
@@ -30,9 +30,9 @@
 <ng-template #linkLabelRtlOutlet>
   <div class="anml-data" [dir]="'rtl'">
     <ng-container *ngTemplateOutlet="iconContainer"></ng-container>
-    <span class="label">{{node.label}}</span>
+    <span class="label">{{node && node.label ? (!isLabelAsync ? (node.label && (node.label === 'string') ? node.label : '') : (labelAsync | async)) : ''}}</span>
   </div>
-  <div class="amml-icon-arrow-container" *ngIf='node.hasChildren'>
+  <div class="amml-icon-arrow-container" *ngIf='node && node.hasChildren'>
     <mat-icon [@ExpandedRTL]="nodeExpandStatus()">
       keyboard_arrow_down
     </mat-icon>
@@ -51,7 +51,7 @@
               svgIcon="{{getSelectedSvgIcon()}}">
     </mat-icon>
     <img *ngSwitchCase="'imageIcon'" matListAvatar class="amml-icon"
-         src="{{getSelectedImageIcon()}}" alt="{{node.label}}"/>
+         src="{{getSelectedImageIcon()}}" alt="{{node && node.label ? (!isLabelAsync ? (node.label && (node.label === 'string') ? node.label : '') : (labelAsync | async)) : ''}}"/>
   </div>
 </ng-template>
 

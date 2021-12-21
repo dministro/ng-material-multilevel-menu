@@ -1,22 +1,25 @@
 <div class="amml-menu-container">
   <!-- Base Template rendering condition starts -->
-  <div *ngIf="nodeConfiguration.customTemplate && !node.hidden;else baseTemplate"
+  <div *ngIf="nodeConfiguration?.customTemplate && !node?.hidden;else baseTemplate"
        [ngClass]="selectedListClasses"
        [ngStyle]="getListStyle()"
        (click)="expand(node)">
-    <ng-container [ngTemplateOutlet]="listTemplate"
+    <ng-container [ngTemplateOutlet]="listTemplate || null"
                   [ngTemplateOutletContext]="{item: node, configuration: nodeConfiguration}">
     </ng-container>
   </div>
   <!-- Base Template rendering condition ends -->
 
   <!-- Recursive Template calls begins -->
-  <div *ngIf="hasItems() && expanded" [@SlideInOut] [dir]="isRtlLayout() ? 'rtl' : 'ltr'" [ngClass]="classes">
-    <ng-list-item *ngFor="let singleNode of nodeChildren | keyvalue : multilevelMenuService.kvDummyComparerFn"
+  <div *ngIf="hasItems() && expanded"
+       [@SlideInOut]
+       [dir]="isRtlLayout() ? 'rtl' : 'ltr'"
+       [ngClass]="classes">
+    <ng-list-item *ngFor="let singleNode of nodeChildren; let i = index"
                   [nodeConfiguration]='nodeConfiguration'
-                  [node]="singleNode.value"
+                  [node]="singleNode"
                   [level]="level + 1"
-                  [submenuLevel]="singleNode.key"
+                  [submenuLevel]="i"
                   [selectedNode]='selectedNode'
                   [nodeExpandCollapseStatus]='nodeExpandCollapseStatus'
                   (selectedItem)="selectedListItem($event)"
@@ -28,18 +31,20 @@
 
 <!-- Base Template starts from here -->
 <ng-template #baseTemplate>
-  <mat-list-item matRipple
-                 *ngIf="!node.hidden"
-                 title="{{node.label}}"
-                 [matRippleDisabled]="node.disabled"
-                 [ngClass]="selectedListClasses"
-                 [ngStyle]="getListStyle()"
-                 (click)="expand(node)">
-    <ng-container *ngTemplateOutlet="linkTemplate"></ng-container>
-  </mat-list-item>
-  <mat-divider *ngIf="nodeConfiguration.useDividers"></mat-divider>
+    <mat-list-item matRipple
+                   *ngIf="!isHiddenAsync ? (node && node.hidden !== true) : !(hiddenAsync | async)"
+                   title="{{node && node.label ? (!isLabelAsync ? (node.label && (node.label === 'string') ? node.label : '') : (labelAsync | async)) : ''}}"
+                   [matRippleDisabled]="!node || node.disabled === true"
+                   [ngClass]="selectedListClasses"
+                   [ngStyle]="getListStyle()"
+                   (click)="expand(node)">
+      <ng-container *ngTemplateOutlet="linkTemplate"></ng-container>
+    </mat-list-item>
+  <mat-divider *ngIf="nodeConfiguration?.useDividers"></mat-divider>
 </ng-template>
 
 <ng-template #linkTemplate>
-  <ng-list-item-content class="filled" [node]="node" [isRtlLayout]="isRtlLayout()"></ng-list-item-content>
+  <ng-list-item-content class="filled"
+                        [node]="node"
+                        [isRtlLayout]="isRtlLayout()"></ng-list-item-content>
 </ng-template>
