@@ -65,7 +65,7 @@ export class ListItemComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges() {
-    this.nodeChildren = this.node && this.node.items ? this.node.items.filter(n => !n.hidden) : [];
+    this.nodeChildren = this.node && this.node.items ? this.node.items/*.filter(n => !n.hidden)*/ : [];
     if (this.node) {
       this.node.hasChildren = this.hasItems();
     }
