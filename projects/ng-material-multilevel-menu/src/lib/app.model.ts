@@ -13,7 +13,7 @@ export interface MultilevelNode {
   activeImageIcon?: string;
   activeSvgIcon?: string;
   hidden?: boolean | Promise<boolean> | Observable<boolean>;
-  link?: string;
+  link?: string | any[];
   externalRedirect?: boolean;
   hrefTargetType?: string;
   data?: any;
